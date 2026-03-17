@@ -36,21 +36,68 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Login - HRMS</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - HRMS Leave Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <h2>Admin Login</h2>
-    <?php if($error) echo "<p style='color:red'>$error</p>"; ?>
-    <form method="POST" action="">
-        <input type="email" name="email" placeholder="Email" required><br><br>
-        <input type="password" name="password" placeholder="Password" required><br><br>
-        <label><input type="checkbox" name="remember_me"> Remember Me</label><br><br>
-        <button type="submit">Login</button>
-    </form>
-    <p>No account? <a href="register.php">Register here</a></p>
+<body class="auth-page">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <i class="bi bi-building"></i>
+                <h2>HRMS</h2>
+                <p>Leave Management System</p>
+            </div>
+            
+            <div class="auth-body">
+                <h3>Login to Your Account</h3>
+                
+                <?php if($error): ?>
+                    <div class="auth-alert alert-danger">
+                        <i class="bi bi-exclamation-circle"></i>
+                        <?php echo htmlspecialchars($error); ?>
+                    </div>
+                <?php endif; ?>
+
+                <form method="POST" action="">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="bi bi-envelope"></i>
+                            Email Address
+                        </label>
+                        <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="bi bi-lock"></i>
+                            Password
+                        </label>
+                        <input type="password" name="password" class="form-control" placeholder="Enter your password" required>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" name="remember_me" id="remember_me">
+                        <label for="remember_me">Remember me for 30 days</label>
+                    </div>
+
+                    <button type="submit" class="btn-auth">
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        Login
+                    </button>
+                </form>
+
+                <div class="auth-links">
+                    <p>Don't have an account? <a href="register.php">Register here</a></p>
+                    <p><a href="forgot-password.php">Forgot Password?</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
