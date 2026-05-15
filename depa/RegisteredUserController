@@ -1,0 +1,25 @@
+One more thing — update RegisteredUserController
+Breeze's default register controller only handles a name field. Since the register form above adds first_name, last_name, and role, update the store() method:
+php// app/Http/Controllers/Auth/RegisteredUserController.php
+public function store(Request $request): RedirectResponse
+{
+    $request->validate([
+        'first_name' => 'required|string|max:255',
+        'last_name'  => 'required|string|max:255',
+        'email'      => 'required|string|email|max:255|unique:users',
+        'role'       => 'required|in:admin,staff',
+        'password'   => ['required', 'confirmed', Rules\Password::defaults()],
+    ]);
+
+    $user = User::create([
+        'name'     => $request->first_name . ' ' . $request->last_name,
+        'email'    => $request->email,
+        'role'     => $request->role,
+        'password' => Hash::make($request->password),
+    ]);
+
+    event(new Registered($user));
+    Auth::login($user);
+
+    return redirect(route('dashboard'));
+}

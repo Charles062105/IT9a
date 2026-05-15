@@ -1,0 +1,99 @@
+Create Laravel project
+Start a fresh Laravel 10 project using Composer.
+composer create-project laravel/laravel MedClinicSystem
+cd MedClinicSystem
+
+2
+Install Laravel Breeze
+Breeze scaffolds login, register, password reset, and email verify.
+composer require laravel/breeze --dev
+
+3
+Scaffold Breeze with Blade
+Use the Blade stack (plain PHP, no React/Vue needed).
+php artisan breeze:install blade
+
+4
+Install Node & compile assets
+Installs Tailwind CSS and compiles the frontend.
+npm install
+npm run build
+
+5
+Configure .env database
+Set your MySQL credentials in the .env file.
+DB_DATABASE=medclinic_db
+DB_USERNAME=root
+DB_PASSWORD=your_password
+
+6
+Run migrations
+Creates the users, sessions, and password_reset_tokens tables.
+php artisan migrate
+
+7
+Add role column to users
+Generate a migration to add role and is_active fields.
+php artisan make:migration add_role_to_users_table
+
+8
+Edit the migration file
+Inside the generated migration's up() method, add:
+$table->enum('role', ['admin','staff'])
+      ->default('staff')->after('email');
+$table->boolean('is_active')
+      ->default(true)->after('role');
+
+9
+Migrate again
+Applies the new role and is_active columns to users table.
+php artisan migrate
+
+10
+Update User model fillable
+Open app/Models/User.php and add the new fields.
+protected $fillable = [
+  'name','email','password',
+  'role','is_active',
+];
+
+11
+Seed an admin user
+Create a seeder so you can log in right away.
+php artisan make:seeder UserSeeder
+php artisan db:seed --class=UserSeeder
+
+12
+Customise the login view
+Edit the Breeze-generated file to match your clinic's branding.
+resources/views/auth/login.blade.php
+
+13
+Customise the register view
+Add role selector and any extra fields your clinic needs.
+resources/views/auth/register.blade.php
+
+14
+Block inactive accounts on login
+Add this check inside AuthenticatedSessionController@store, right after authenticate():
+if (!auth()->user()->is_active) {
+  auth()->logout();
+  return back()->withErrors([
+    'email'=>'Account deactivated.'
+  ]);
+
+}
+15
+Start the dev server
+Visit http://localhost:8000/login to see the live form.
+php artisan serve
+
+composer global require laravel/installer
+laravel new your-project-name
+composer create-project laravel/laravel your-project-name
+laravel new your-project-name
+composer require laravel/breeze --dev
+php artisan breeze:install
+php artisan migrate
+npm run dev
+php artisan serve
